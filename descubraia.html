@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubra a IA - Visual Novel & Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#090d16',
+                        darkcard: '#111827',
+                        vnbox: '#0f172a',
+                        kahootRed: '#e11d48',
+                        kahootBlue: '#0284c7'
+                    },
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        body: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* Fundo Animado com Névoa Escura */
+        .dark-ambient-bg {
+            background: radial-gradient(circle at 50% 20%, #4b1b23 0%, #2a1b0f 45%, #220101 100%);
+        }
+
+        /* Visual Novel Dialogue Box (Ace Attorney & Wikipe-tan Style) */
+        .vn-dialogue-box {
+            background: rgba(15, 23, 42, 0.94);
+            border: 2px solid rgba(241, 99, 130, 0.5);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 20px rgba(99, 102, 241, 0.25);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Sombra e Destaque nos Personagens VN */
+        .vn-sprite {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease, opacity 0.3s ease;
+            transform-origin: bottom center;
+        }
+        .vn-sprite.speaking {
+            transform: scale(1.05);
+            opacity: 1;
+            filter: drop-shadow(0 0 25px rgba(241, 99, 158, 0.4)) brightness(1.05);
+            z-index: 20;
+        }
+        .vn-sprite.silent {
+            transform: scale(0.95);
+            opacity: 0.45;
+            filter: brightness(0.6) contrast(0.9);
+            z-index: 10;
+        }
+
+        /* Botões Kahoot com Efeito 3D */
+        .btn-kahoot-ai {
+            background-color: #e11d48;
+            box-shadow: 0 6px 0 #9f1239;
+            transition: all 0.15s ease;
+        }
+        .btn-kahoot-ai:hover {
+            background-color: #f43f5e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #9f1239;
+        }
+        .btn-kahoot-ai:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #9f1239;
+        }
+
+        .btn-kahoot-real {
+            background-color: #0284c7;
+            box-shadow: 0 6px 0 #075985;
+            transition: all 0.15s ease;
+        }
+        .btn-kahoot-real:hover {
+            background-color: #38bdf8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #075985;
+        }
+        .btn-kahoot-real:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #075985;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #812e4a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ca5a38;
+        }
+    </style>
+</head>
+<body class="dark-ambient-bg min-h-screen flex flex-col justify-between items-center p-2 md:p-6 relative">
+
+    <!-- CABEÇALHO FIXO -->
+    <header class="w-full max-w-5xl flex justify-between items-center py-3 px-5 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-800/80 mb-3 z-30 shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-indigo-400 font-bold">
+                <i class="fa-solid fa-microchip text-lg"></i>
+            </div>
+            <span class="font-display font-bold text-lg md:text-xl text-slate-100 tracking-wide">
+                Descubra a IA
+            </span>
+        </div>
+        <div id="header-badge" class="text-xs md:text-sm font-semibold px-3 py-1 bg-slate-800/90 text-indigo-300 rounded-lg border border-slate-700">
+            Curso Técnico de Desenvolvimento de Sistemas no SENAI
+        </div>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL -->
+    <main class="w-full max-w-5xl flex-1 flex flex-col justify-center items-center relative z-10 my-auto">
+
+        <!-- ================================================================= -->
+        <!-- TELA 1: INICIAL -->
+        <!-- ================================================================= -->
+        <section id="screen-start" class="w-full max-w-2xl bg-slate-900/90 border border-slate-800 rounded-3xl p-6 md:p-10 text-center shadow-2xl backdrop-blur-md">
+            
+            <div class="inline-block p-4 bg-indigo-950/80 rounded-2xl border border-indigo-500/30 mb-6 text-indigo-400 shadow-inner">
+                <i class="fa-solid fa-robot text-5xl md:text-6xl"></i>
+            </div>
+            
+            <h1 class="font-display text-4xl md:text-6xl font-extrabold mb-4 text-white tracking-wide">
+                Descubra a IA
+            </h1>
+            
+            <p class="text-slate-300 text-base md:text-lg mb-8 max-w-lg mx-auto leading-relaxed">
+                Você consegue distinguir fotos reais de imagens geradas por Inteligência Artificial? Aceite o desafio dos nossos professores de TI!
+            </p>
+
+            <!-- Card Informativo dos Professores -->
+            <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 mb-8 max-w-md mx-auto text-left text-sm text-slate-300 flex items-center space-x-4">
+                <i class="fa-solid fa-user-ninja text-3xl text-indigo-400"></i>
+                <div>
+                    <p class="font-bold text-slate-100">Prof. Edgar & Prof. João</p>
+                    <p class="text-xs text-slate-400">Instruções em modo Visual Novel antes de iniciar o quiz.</p>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full max-w-md py-4 px-8 bg-[#812e4a] hover:bg-[#a03a5d] text-white font-display font-bold text-xl rounded-2xl shadow-lg shadow-[#812e4a]/30 hover:shadow-[#812e4a]/50 transform hover:-translate-y-0.5 active:translate-y-0.5 transition cursor-pointer flex items-center justify-center space-x-3 mx-auto">
+                <span>INICIAR JOGO</span>
+                <i class="fa-solid fa-play text-lg"></i>
+            </button>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TELA 2: VISUAL NOVEL (INTRODUÇÃO) -->
+        <!-- ================================================================= -->
+        <section id="screen-vn" class="hidden w-full max-w-4xl flex flex-col justify-end min-h-[560px] md:min-h-[620px] relative">
+            
+            <!-- Cenário de Fundo (Laboratório / Sala de Aula de TI) -->
+            <div class="relative w-full h-[640px] md:h-[600px] bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col justify-between p-4 md:p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+                
+                <!-- Grade Tecnológica de Fundo -->
+                <div class="absolute inset-0 opacity-15 pointer-events-none bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+                
+                <!-- Topo VN: Indicador de Ambiente -->
+                <div class="relative z-10 flex justify-between items-center text-xs text-slate-400 bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-800">
+                    <span class="flex items-center gap-2 font-mono"><i class="fa-solid fa-terminal text-indigo-400"></i> Laboratório de ADS</span>
+                    <button onclick="skipIntro()" class="text-xs text-indigo-400 hover:text-indigo-300 underline cursor-pointer">Pular Conversa</button>
+                </div>
+
+                <!-- PALCO DOS PERSONAGENS MAIORES (60-70% DA ALTURA) -->
+                <div class="relative z-10 flex justify-around items-end h-[360px] md:h-[420px] my-auto px-4 md:px-12 pointer-events-none">
+                    
+                    <!-- PROF. EDGAR (IMAGEM GRANDE) -->
+                    <div id="sprite-edgar" class="img">
+                        <img id="sprite-edgar" src="Edgar senai.png" alt="Prof. Edgar" class="img">
+                    </div>
+
+                    <!-- PROF. JOÃO (IMAGEM GRANDE) -->
+                    <div id="sprite-joao" class="img">
+                        <img id="img-sprite-joao" src="João senai.png" alt="Prof. João" class="img">
+                    </div>
+
+                </div>
+
+                <!-- CAIXA DE DIÁLOGO ESTILO ACE ATTORNEY / WIKIPE-TAN -->
+                <div class="relative z-20 vn-dialogue-box rounded-2xl p-5 md:p-6 cursor-pointer" onclick="handleDialogueClick()">
+                    
+                    <!-- ETIQUETA / BADGE COM NOME DO PERSONAGEM -->
+                    <div class="absolute -top-5 left-6">
+                        <span id="vn-name-tag" class="px-5 py-1.5 bg-indigo-600 text-white font-display font-bold text-sm md:text-base rounded-xl border border-indigo-300 shadow-xl tracking-wider">
+                            Prof. Edgar
+                        </span>
+                    </div>
+
+                    <!-- TEXTO DE DIÁLOGO COM EFEITO TYPEWRITER -->
+                    <div class="pt-2">
+                        <p id="vn-text" class="text-slate-100 text-base md:text-lg leading-relaxed min-h-[70px] font-medium">
+                            <!-- Texto inserido dinamicamente via JS -->
+                        </p>
+                    </div>
+
+                    <!-- INDICADOR "▼ CLIQUE PARA CONTINUAR" -->
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-800/80 mt-2">
+                        <span class="text-xs text-slate-500 font-mono" id="vn-step-indicator">1 / 5</span>
+                        <div class="text-indigo-400 font-bold text-xs md:text-sm flex items-center space-x-1.5 animate-bounce">
+                            <span>Clique para avançar</span>
+                            <i class="fa-solid fa-caret-down text-base"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TELA 3: QUIZ ESTILO KAHOOT (MODO ESCURO) -->
+        <!-- ================================================================= -->
+        <section id="screen-quiz" class="hidden w-full max-w-3xl flex flex-col items-center">
+            
+            <!-- BARRA DE STATUS SUPERIOR -->
+            <div class="w-full flex justify-between items-center bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 mb-4 shadow-xl backdrop-blur-md">
+                <div class="flex items-center space-x-2">
+                    <span class="bg-indigo-950 text-indigo-300 text-xs md:text-sm font-bold px-3 py-1.5 rounded-xl border border-indigo-800" id="quiz-counter">
+                        Pergunta 1 de 10
+                    </span>
+                </div>
+                
+                <div class="flex items-center space-x-3 text-amber-400 font-bold text-sm md:text-base">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Acertos: <span id="quiz-score" class="text-white">0</span></span>
+                </div>
+            </div>
+
+            <!-- CARD DA PERGUNTA E IMAGEM -->
+            <div class="w-full bg-slate-900/90 border border-slate-800 rounded-3xl p-4 md:p-6 shadow-2xl flex flex-col items-center text-center backdrop-blur-md mb-4">
+                <h2 class="font-display text-lg md:text-2xl font-bold text-slate-100 mb-4">
+                    Esta imagem é uma foto REAL ou foi gerada por Inteligência Artificial?
+                </h2>
+
+                <!-- Container da Imagem -->
+                <div class="relative w-full max-w-md h-64 md:h-72 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 flex items-center justify-center group">
+                    <img id="quiz-img" src="" alt="Desafio Quiz" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=Imagem+indisponivel'">
+                    
+                    <!-- Botão de Expandir / Zoom na Imagem -->
+                    <button onclick="openZoomModal()" class="absolute bottom-3 right-3 bg-slate-950/80 hover:bg-slate-900 text-slate-200 text-xs px-3 py-1.5 rounded-xl border border-slate-700 backdrop-blur-sm transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        <span>Ampliar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- BOTÕES ESTILO KAHOOT -->
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- BOTÃO: GERADA POR IA (▲ VERMELHO) -->
+                <button onclick="submitAnswer(true)" class="btn-kahoot-ai py-5 px-6 rounded-2xl font-display font-bold text-lg md:text-xl text-white flex items-center justify-center space-x-4 cursor-pointer">
+                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+                        <span class="text-2xl">▲</span>
+                    </div>
+                    <span>Gerada por IA</span>
+                </button>
+
+                <!-- BOTÃO: IMAGEM REAL (◆ AZUL) -->
+                <button onclick="submitAnswer(false)" class="btn-kahoot-real py-5 px-6 rounded-2xl font-display font-bold text-lg md:text-xl text-white flex items-center justify-center space-x-4 cursor-pointer">
+                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+                        <span class="text-2xl">◆</span>
+                    </div>
+                    <span>Imagem Real</span>
+                </button>
+
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- MODAL DE FEEDBACK / EXPLICAÇÃO DIDÁTICA DA PERGUNTA -->
+        <!-- ================================================================= -->
+        <div id="modal-feedback" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl text-center">
+                
+                <div id="feedback-icon-box" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4">
+                    <!-- Ícone Dinâmico -->
+                </div>
+
+                <h3 id="feedback-title" class="font-display text-2xl md:text-3xl font-bold mb-2">
+                    <!-- Correto / Incorreto -->
+                </h3>
+
+                <!-- Explicação do Professor -->
+                <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 text-left mb-6 my-4">
+                    <div class="flex items-center space-x-2 text-indigo-400 text-xs font-bold mb-1">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>Explicação do Professor:</span>
+                    </div>
+                    <p id="feedback-desc" class="text-slate-300 text-sm leading-relaxed">
+                        <!-- Texto explicativo -->
+                    </p>
+                </div>
+
+                <button onclick="closeFeedbackAndNext()" class="w-full py-3.5 px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-base rounded-2xl shadow-lg transition cursor-pointer">
+                    Próxima Pergunta <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL DE ZOOM NA IMAGEM DA QUESTÃO -->
+        <div id="modal-zoom" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4" onclick="closeZoomModal()">
+            <div class="relative max-w-4xl w-full max-h-[85vh] flex items-center justify-center">
+                <img id="zoom-img-target" src="" class="max-w-full max-h-[80vh] rounded-2xl border border-slate-700 shadow-2xl object-contain">
+            </div>
+            <p class="text-slate-400 text-xs mt-4">Clique em qualquer lugar para fechar</p>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- TELA 4: RESULTADO FINAL E REVISÃO DAS QUESTÕES -->
+        <!-- ================================================================= -->
+        <section id="screen-result" class="hidden w-full max-w-3xl bg-slate-900/90 border border-slate-800 rounded-3xl p-6 md:p-8 text-center shadow-2xl backdrop-blur-md">
+            
+            <div id="result-icon-box" class="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-xl">
+                <!-- Ícone Vitória ou Derrota -->
+            </div>
+
+            <h1 id="result-status-title" class="font-display text-3xl md:text-5xl font-extrabold mb-2 text-white">
+                <!-- Título Vitória/Derrota -->
+            </h1>
+
+            <p id="result-status-subtitle" class="text-slate-300 text-sm md:text-base mb-6">
+                <!-- Subtítulo -->
+            </p>
+
+            <!-- Placar de Desempenho -->
+            <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-5 mb-6 max-w-md mx-auto">
+                <div class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Pontuação Final</div>
+                <div class="text-4xl md:text-5xl font-display font-extrabold text-amber-400" id="result-score-text">
+                    0 / 10
+                </div>
+                <p class="text-xs text-slate-400 mt-2" id="result-criteria-note">
+                    Mínimo para aprovação: 6 acertos (60%)
+                </p>
+            </div>
+
+            <!-- REVISÃO DAS 10 QUESTÕES -->
+            <div class="text-left mb-6">
+                <h3 class="font-display font-bold text-lg text-slate-200 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-400"></i>
+                    <span>Revisão das Respostas:</span>
+                </h3>
+                
+                <div id="review-list-container" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                    <!-- Itens inseridos dinamicamente via JS -->
+                </div>
+            </div>
+
+            <button onclick="restartGame()" class="w-full max-w-md py-4 px-8 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-xl rounded-2xl shadow-lg transition cursor-pointer flex items-center justify-center space-x-3 mx-auto">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>JOGAR NOVAMENTE</span>
+            </button>
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="w-full max-w-5xl text-center text-xs text-slate-500 py-3 mt-4 border-t border-slate-800/60">
+        Desenvolvido para trabalho acadêmico de TI &bull; Tema: Percepção Visual & IA
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- SCRIPT JS SEPARADO E ALTAMENTE LEGÍVEL -->
+    <!-- ================================================================= -->
+    <script>
+
+        /* ==========================================================================
+           1. CONFIGURAÇÃO DOS PERSONAGENS (FÁCIL DE ALTERAR PARA OS ALUNOS)
+           --------------------------------------------------------------------------
+           Para alterar a imagem de um professor para um arquivo local do seu projeto,
+           basta trocar o valor de "imagem" para o caminho da foto (ex: "imagens/edgar.png").
+           ========================================================================== */
+        const PERSONAGENS = {
+            edgar: {
+                nome: "Prof. Edgar",
+                // Pode trocar por: "imagens/edgar.png" ou uma URL de imagem da internet
+                imagem: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 450'><rect width='300' height='450' fill='none'/><path d='M80 450 C80 320, 110 260, 150 260 C190 260, 220 320, 220 450 Z' fill='%231e293b'/><path d='M130 260 L150 310 L170 260 Z' fill='%2338bdf8'/><circle cx='150' cy='180' r='75' fill='%23fbcfe8'/><path d='M90 170 C90 100, 130 90, 150 90 C170 90, 210 100, 210 170 C210 120, 170 105, 150 105 C130 105, 90 120, 90 170 Z' fill='%23334155'/><rect x='110' y='160' width='32' height='22' rx='4' fill='%2338bdf8' fill-opacity='0.4' stroke='%230f172a' stroke-width='4'/><rect x='158' y='160' width='32' height='22' rx='4' fill='%2338bdf8' fill-opacity='0.4' stroke='%230f172a' stroke-width='4'/><line x1='142' y1='171' x2='158' y2='171' stroke='%230f172a' stroke-width='4'/><path d='M130 215 Q150 230 170 215' stroke='%23475569' stroke-width='5' fill='none' stroke-linecap='round'/></svg>",
+                corBadge: "bg-indigo-600 border-indigo-300"
+            },
+            joao: {
+                nome: "Prof. João",
+                // Pode trocar por: "imagens/joao.png" ou uma URL de imagem da internet
+                imagem: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 450'><rect width='300' height='450' fill='none'/><path d='M75 450 C75 310, 110 250, 150 250 C190 250, 225 310, 225 450 Z' fill='%23064e3b'/><circle cx='150' cy='175' r='75' fill='%23fed7aa'/><path d='M85 160 C90 110, 120 90, 150 90 C180 90, 210 110, 215 160 C205 125, 180 105, 150 105 C120 105, 95 125, 85 160 Z' fill='%230f172a'/><circle cx='125' cy='165' r='7' fill='%230f172a'/><circle cx='175' cy='165' r='7' fill='%230f172a'/><path d='M130 205 Q150 220 170 205' stroke='%230f172a' stroke-width='5' fill='none' stroke-linecap='round'/><path d='M80 165 C80 120, 110 100, 150 100 C190 100, 220 120, 220 165' fill='none' stroke='%2364748b' stroke-width='8'/><rect x='72' y='150' width='14' height='30' rx='4' fill='%230284c7'/><rect x='214' y='150' width='14' height='30' rx='4' fill='%230284c7'/></svg>",
+                corBadge: "bg-emerald-600 border-emerald-300"
+            }
+        };
+
+        /* ==========================================================================
+           2. ROTEIRO DA VISUAL NOVEL (INTRODUÇÃO)
+           ========================================================================== */
+        const roteiroVN = [
+            {
+                personagem: "edgar",
+                texto: "Olá, estudante! Seja muito bem-vindo ao nosso Laboratório de ADS. Eu sou o Professor Edgar!"
+            },
+            {
+                personagem: "joao",
+                texto: "E eu sou o Professor João! Preparamos um teste prático sobre Inteligência Artificial para a nossa turma."
+            },
+            {
+                personagem: "edgar",
+                texto: "Com o avanço de ferramentas como Midjourney e DALL-E, identificar se uma imagem é real ou sintetizada se tornou um desafio crucial em TI e para as pessoas comuns no dia a dia."
+            },
+            {
+                personagem: "joao",
+                texto: "A dinâmica é estilo Kahoot: mostraremos 10 imagens. Você deve clicar em 'Gerada por IA' (▲ Vermelho) ou 'Imagem Real' (◆ Azul)."
+            },
+            {
+                personagem: "edgar",
+                texto: "Se acertar 6 ou mais imagens (60%), você é APROVADO! Caso contrário, terá que reiniciar o teste. Boa sorte!"
+            }
+        ];
+
+        /* ==========================================================================
+           3. BANCO DE DADOS DAS 10 PERGUNTAS (REAL VS IA)
+           ========================================================================== */
+        const perguntas = [
+            {
+                id: 1,
+                imagem: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80",
+                isIA: false,
+                titulo: "Gato doméstico descansando",
+                explicacao: "IMAGEM REAL: Apresenta reflexos ópticos autênticos nos olhos, pelos individuais definidos por foco de câmera real e fios de bigode naturais."
+            },
+            {
+                id: 2,
+                imagem: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+                isIA: true,
+                titulo: "Arte conceitual fluida",
+                explicacao: "GERADA POR IA: Apresenta padrões de gradiente impossíveis fisicamente, simetria computacional perfeita e dobras sem lógica estrutural de relevo."
+            },
+            {
+                id: 3,
+                imagem: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80",
+                isIA: false,
+                titulo: "Xícara de café sobre madeira",
+                explicacao: "IMAGEM REAL: Imperfeições naturais no grão da madeira, profundidade de campo óptica suave e vapor real fotografado com obturador rápido."
+            },
+            {
+                id: 4,
+                imagem: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
+                isIA: true,
+                titulo: "Cérebro digital com redes neurais",
+                explicacao: "GERADA POR IA: Ilustração sintetizada por computador combinando nós de luz não-físicos e circuitos sem conectividade elétrica real."
+            },
+            {
+                id: 5,
+                imagem: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+                isIA: false,
+                titulo: "Retrato de homem sorrindo",
+                explicacao: "IMAGEM REAL: Textura de pele humana com poros visíveis, iluminação solar natural consistente nos dois lados do rosto e fundo naturalmente desfocado."
+            },
+            {
+                id: 6,
+                imagem: "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?auto=format&fit=crop&w=800&q=80",
+                isIA: true,
+                titulo: "Paisagem surrealista cintilante",
+                explicacao: "GERADA POR IA: Mistura de estilos artísticos com aberrações cromáticas sintéticas e reflexos d'água que não obedecem às leis da física."
+            },
+            {
+                id: 7,
+                imagem: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+                isIA: false,
+                titulo: "Arranha-céu espelhado",
+                explicacao: "IMAGEM REAL: Linhas de perspectiva arquitetônica matematicamente exatas para uma lente grande-angular real e reflexos consistentes."
+            },
+            {
+                id: 8,
+                imagem: "https://images.unsplash.com/photo-1618172193763-c511deb635ca?auto=format&fit=crop&w=800&q=80",
+                isIA: true,
+                titulo: "Esferas de vidro flutuantes",
+                explicacao: "GERADA POR IA: Refração de luz incoerente dentro das esferas, ausência de sombras de contato e artefatos de renderização algorítmica."
+            },
+            {
+                id: 9,
+                imagem: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80",
+                isIA: false,
+                titulo: "Homem de óculos em ambiente urbano",
+                explicacao: "IMAGEM REAL: Micro-reflexos reais nas lentes dos óculos, dobras autênticas no tecido da jaqueta e grão ISO característico de fotografia."
+            },
+            {
+                id: 10,
+                imagem: "https://images.unsplash.com/photo-1633167606207-d840b5070fc2?auto=format&fit=crop&w=800&q=80",
+                isIA: true,
+                titulo: "Robô humanóide com neon",
+                explicacao: "GERADA POR IA: Texturas plásticas hiper-suavizadas sem desgaste mecânico real e linhas de contorno onduladas típicas de difusão."
+            }
+        ];
+
+        /* ==========================================================================
+           4. VARIÁVEIS DE ESTADO DO JOGO
+           ========================================================================== */
+        let vnIndex = 0;
+        let isTyping = false;
+        let typewriterTimer = null;
+        let currentTextToType = "";
+        
+        let quizIndex = 0;
+        let score = 0;
+        let userHistory = [];
+
+
+        // Inicializar imagens dos professores nos elementos img
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("img-sprite-edgar").src = PERSONAGENS.edgar.imagem;
+            document.getElementById("img-sprite-joao").src = PERSONAGENS.joao.imagem;
+        });
+
+        // Alternador de telas
+        function switchScreen(screenId) {
+            document.getElementById("screen-start").classList.add("hidden");
+            document.getElementById("screen-vn").classList.add("hidden");
+            document.getElementById("screen-quiz").classList.add("hidden");
+            document.getElementById("screen-result").classList.add("hidden");
+
+            document.getElementById(screenId).classList.remove("hidden");
+        }
+
+        // Iniciar Jogo
+        function startGame() {
+            vnIndex = 0;
+            switchScreen("screen-vn");
+            renderVNStep();
+        }
+
+        /* ==========================================================================
+           5. LÓGICA DA VISUAL NOVEL (TYPEWRITER E ALTERNÂNCIA DE PERSONAGENS)
+           ========================================================================== */
+        function renderVNStep() {
+            const step = roteiroVN[vnIndex];
+            const charConfig = PERSONAGENS[step.personagem];
+
+            // Atualizar Tag do Nome e Estilização do Badge
+            const nameTag = document.getElementById("vn-name-tag");
+            nameTag.innerText = charConfig.nome;
+            nameTag.className = `px-5 py-1.5 text-white font-display font-bold text-sm md:text-base rounded-xl border shadow-xl tracking-wider ${charConfig.corBadge}`;
+
+            // Destacar o Personagem Ativo (Acender/Apagar)
+            const spriteEdgar = document.getElementById("sprite-edgar");
+            const spriteJoao = document.getElementById("sprite-joao");
+
+            if (step.personagem === "edgar") {
+                spriteEdgar.className = "vn-sprite speaking flex flex-col items-center justify-end h-full w-1/2 max-w-[280px]";
+                spriteJoao.className = "vn-sprite silent flex flex-col items-center justify-end h-full w-1/2 max-w-[280px]";
+            } else {
+                spriteJoao.className = "vn-sprite speaking flex flex-col items-center justify-end h-full w-1/2 max-w-[280px]";
+                spriteEdgar.className = "vn-sprite silent flex flex-col items-center justify-end h-full w-1/2 max-w-[280px]";
+            }
+
+            document.getElementById("vn-step-indicator").innerText = `${vnIndex + 1} / ${roteiroVN.length}`;
+
+            // Iniciar Efeito Typewriter
+            startTypewriter(step.texto);
+        }
+
+        function startTypewriter(text) {
+            clearInterval(typewriterTimer);
+            currentTextToType = text;
+            const textEl = document.getElementById("vn-text");
+            textEl.innerText = "";
+            isTyping = true;
+            let i = 0;
+
+            typewriterTimer = setInterval(() => {
+                if (i < text.length) {
+                    textEl.innerText += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typewriterTimer);
+                    isTyping = false;
+                }
+            }, 25);
+        }
+
+        function handleDialogueClick() {
+            if (isTyping) {
+                // Se estiver digitando, completa o texto instantaneamente no clique
+                clearInterval(typewriterTimer);
+                document.getElementById("vn-text").innerText = currentTextToType;
+                isTyping = false;
+            } else {
+                // Avança para a próxima fala
+                if (vnIndex < roteiroVN.length - 1) {
+                    vnIndex++;
+                    renderVNStep();
+                } else {
+                    startQuiz();
+                }
+            }
+        }
+
+        function skipIntro() {
+            clearInterval(typewriterTimer);
+            startQuiz();
+        }
+
+        /* ==========================================================================
+           6. LÓGICA DO QUIZ KAHOOT
+           ========================================================================== */
+        function startQuiz() {
+            quizIndex = 0;
+            score = 0;
+            userHistory = [];
+            switchScreen("screen-quiz");
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = perguntas[quizIndex];
+            document.getElementById("quiz-counter").innerText = `Pergunta ${quizIndex + 1} de ${perguntas.length}`;
+            document.getElementById("quiz-score").innerText = score;
+            document.getElementById("quiz-img").src = q.imagem;
+        }
+
+        function submitAnswer(userSelectedIA) {
+            const q = perguntas[quizIndex];
+            const isCorrect = (userSelectedIA === q.isIA);
+
+            if (isCorrect) {
+                score++;
+            }
+
+            userHistory.push({
+                question: q,
+                userAnswerIsIA: userSelectedIA,
+                isCorrect: isCorrect
+            });
+
+            showFeedbackModal(isCorrect, q);
+        }
+
+        function showFeedbackModal(isCorrect, question) {
+            const modal = document.getElementById("modal-feedback");
+            const iconBox = document.getElementById("feedback-icon-box");
+            const titleEl = document.getElementById("feedback-title");
+            const descEl = document.getElementById("feedback-desc");
+
+            if (isCorrect) {
+                iconBox.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+                iconBox.innerHTML = '<i class="fa-solid fa-check"></i>';
+                titleEl.innerText = "Resposta Correta! 🎉";
+                titleEl.className = "font-display text-2xl md:text-3xl font-bold mb-2 text-emerald-400";
+            } else {
+                iconBox.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 bg-rose-500/20 text-rose-400 border border-rose-500/40";
+                iconBox.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                titleEl.innerText = "Resposta Incorreta! ❌";
+                titleEl.className = "font-display text-2xl md:text-3xl font-bold mb-2 text-rose-400";
+            }
+
+            descEl.innerText = question.explicacao;
+            modal.classList.remove("hidden");
+        }
+
+        function closeFeedbackAndNext() {
+            document.getElementById("modal-feedback").classList.add("hidden");
+            if (quizIndex < perguntas.length - 1) {
+                quizIndex++;
+                renderQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        // Modal de Zoom da imagem
+        function openZoomModal() {
+            const currentImg = perguntas[quizIndex].imagem;
+            document.getElementById("zoom-img-target").src = currentImg;
+            document.getElementById("modal-zoom").classList.remove("hidden");
+        }
+
+        function closeZoomModal() {
+            document.getElementById("modal-zoom").classList.add("hidden");
+        }
+
+        /* ==========================================================================
+           7. TELA DE RESULTADOS E REVISÃO
+           ========================================================================== */
+        function finishQuiz() {
+            switchScreen("screen-result");
+
+            const hasWon = score >= 6;
+            const iconBox = document.getElementById("result-icon-box");
+            const titleEl = document.getElementById("result-status-title");
+            const subtitleEl = document.getElementById("result-status-subtitle");
+            const scoreText = document.getElementById("result-score-text");
+
+            scoreText.innerText = `${score} / ${perguntas.length}`;
+
+            if (hasWon) {
+                iconBox.className = "w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-emerald-500/20";
+                iconBox.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+                titleEl.innerText = "VOCÊ VENCEU!";
+                titleEl.className = "font-display text-3xl md:text-5xl font-extrabold mb-2 text-emerald-400";
+                subtitleEl.innerText = "Parabéns! Você demonstrou excelente percepção para identificar inteligência artificial.";
+            } else {
+                iconBox.className = "w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-4 bg-rose-500/20 text-rose-400 border border-rose-500/40 shadow-rose-500/20";
+                iconBox.innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i>';
+                titleEl.innerText = "TENTE NOVAMENTE!";
+                titleEl.className = "font-display text-3xl md:text-5xl font-extrabold mb-2 text-rose-400";
+                subtitleEl.innerText = "Você não atingiu a pontuação mínima de 6 acertos para aprovação.";
+            }
+
+            // Gerar Lista de Revisão
+            const reviewContainer = document.getElementById("review-list-container");
+            reviewContainer.innerHTML = "";
+
+            userHistory.forEach((item, idx) => {
+                const itemDiv = document.createElement("div");
+                itemDiv.className = `p-3 rounded-xl border text-xs md:text-sm flex items-start space-x-3 ${
+                    item.isCorrect 
+                        ? "bg-emerald-950/40 border-emerald-800/50 text-emerald-200" 
+                        : "bg-rose-950/40 border-rose-800/50 text-rose-200"
+                }`;
+
+                itemDiv.innerHTML = `
+                    <div class="font-bold text-base mt-0.5">
+                        ${item.isCorrect ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' : '<i class="fa-solid fa-circle-xmark text-rose-400"></i>'}
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-bold text-slate-100 mb-0.5">Q${idx + 1}: ${item.question.titulo}</div>
+                        <div>Sua resposta: <b>${item.userAnswerIsIA ? 'Gerada por IA' : 'Imagem Real'}</b> | Gabarito: <b>${item.question.isIA ? 'Gerada por IA' : 'Imagem Real'}</b></div>
+                        <p class="text-slate-400 text-xs mt-1">${item.question.explicacao}</p>
+                    </div>
+                `;
+
+                reviewContainer.appendChild(itemDiv);
+            });
+        }
+
+        function restartGame() {
+            switchScreen("screen-start");
+        }
+    </script>
+</body>
+</html>
