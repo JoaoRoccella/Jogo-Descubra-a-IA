@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubra a IA - Visual Novel & Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-ambient-bg min-h-screen flex flex-col justify-between items-center p-2 md:p-6 relative">
+
+    <!-- CABEÇALHO FIXO -->
+    <header class="w-full max-w-5xl flex justify-between items-center py-3 px-5 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-800/80 mb-3 z-30 shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600/30 border border-indigo-400/40 flex items-center justify-center text-indigo-400 font-bold">
+                <i class="fa-solid fa-microchip text-lg"></i>
+            </div>
+            <span class="font-display font-bold text-lg md:text-xl text-slate-100 tracking-wide">
+                Descubra a IA
+            </span>
+        </div>
+        <div id="header-badge" class="text-xs md:text-sm font-semibold px-3 py-1 bg-slate-800/90 text-indigo-300 rounded-lg border border-slate-700">
+            Curso Técnico de Desenvolvimento de Sistemas no SENAI
+        </div>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL -->
+    <main class="w-full max-w-5xl flex-1 flex flex-col justify-center items-center relative z-10 my-auto">
+
+
+        <section id="screen-start" class="w-full max-w-2xl bg-slate-900/90 border border-slate-800 rounded-3xl p-6 md:p-10 text-center shadow-2xl backdrop-blur-md">
+            
+            <div class="inline-block p-4 bg-indigo-950/80 rounded-2xl border border-indigo-500/30 mb-6 text-indigo-400 shadow-inner">
+                <i class="fa-solid fa-robot text-5xl md:text-6xl"></i>
+            </div>
+            
+            <h1 class="font-display text-4xl md:text-6xl font-extrabold mb-4 text-white tracking-wide">
+                Descubra a IA
+            </h1>
+            
+            <p class="text-slate-300 text-base md:text-lg mb-8 max-w-lg mx-auto leading-relaxed">
+                Você consegue distinguir fotos reais de imagens geradas por Inteligência Artificial? Aceite o desafio dos nossos professores de TI!
+            </p>
+
+            <!-- Card Informativo dos Professores -->
+            <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 mb-8 max-w-md mx-auto text-left text-sm text-slate-300 flex items-center space-x-4">
+                <i class="fa-solid fa-user-ninja text-3xl text-indigo-400"></i>
+                <div>
+                    <p class="font-bold text-slate-100">Prof. Edgar & Prof. João</p>
+                    <p class="text-xs text-slate-400">Instruções em modo Visual Novel antes de iniciar o quiz.</p>
+                </div>
+            </div>
+
+            <button data-action="start-game" class="w-full max-w-md py-4 px-8 bg-[#812e4a] hover:bg-[#a03a5d] text-white font-display font-bold text-xl rounded-2xl shadow-lg shadow-[#812e4a]/30 hover:shadow-[#812e4a]/50 transform hover:-translate-y-0.5 active:translate-y-0.5 transition cursor-pointer flex items-center justify-center space-x-3 mx-auto">
+                <span>INICIAR JOGO</span>
+                <i class="fa-solid fa-play text-lg"></i>
+            </button>
+        </section>
+
+
+        <section id="screen-vn" class="hidden w-full max-w-4xl flex flex-col justify-end min-h-[560px] md:min-h-[620px] relative">
+            
+            <!-- Cenário de Fundo (Laboratório / Sala de Aula de TI) -->
+            <div class="relative w-full h-[640px] md:h-[600px] bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col justify-between p-4 md:p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+                
+                <!-- Grade Tecnológica de Fundo -->
+                <div class="absolute inset-0 opacity-15 pointer-events-none bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+                
+                <!-- Topo VN: Indicador de Ambiente -->
+                <div class="relative z-10 flex justify-between items-center text-xs text-slate-400 bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-800">
+                    <span class="flex items-center gap-2 font-mono"><i class="fa-solid fa-terminal text-indigo-400"></i> Laboratório de ADS</span>
+                    <button data-action="skip-intro" class="text-xs text-indigo-400 hover:text-indigo-300 underline cursor-pointer">Pular Conversa</button>
+                </div>
+
+                <!-- PALCO DOS PERSONAGENS MAIORES (60-70% DA ALTURA) -->
+                <div class="relative z-10 flex justify-around items-end h-[360px] md:h-[420px] my-auto px-4 md:px-12 pointer-events-none">
+                    
+                    <!-- PROF. EDGAR (IMAGEM GRANDE) -->
+                    <div id="sprite-edgar" class="vn-sprite flex flex-col items-center justify-end h-full w-1/2 max-w-[280px]">
+                        <img id="img-sprite-edgar" src="assets/images/edgard.png" alt="Prof. Edgar" class="h-full max-w-full object-contain">
+                    </div>
+
+                    <!-- PROF. JOÃO (IMAGEM GRANDE) -->
+                    <div id="sprite-joao" class="vn-sprite flex flex-col items-center justify-end h-full w-1/2 max-w-[280px]">
+                        <img id="img-sprite-joao" src="assets/images/joao.png" alt="Prof. João" class="h-full max-w-full object-contain">
+                    </div>
+
+                </div>
+
+                <!-- CAIXA DE DIÁLOGO ESTILO ACE ATTORNEY / WIKIPE-TAN -->
+                <div class="relative z-20 vn-dialogue-box rounded-2xl p-5 md:p-6 cursor-pointer" data-action="advance-dialogue">
+                    
+                    <!-- ETIQUETA / BADGE COM NOME DO PERSONAGEM -->
+                    <div class="absolute -top-5 left-6">
+                        <span id="vn-name-tag" class="px-5 py-1.5 bg-indigo-600 text-white font-display font-bold text-sm md:text-base rounded-xl border border-indigo-300 shadow-xl tracking-wider">
+                            Prof. Edgar
+                        </span>
+                    </div>
+
+                    <!-- TEXTO DE DIÁLOGO COM EFEITO TYPEWRITER -->
+                    <div class="pt-2">
+                        <p id="vn-text" class="text-slate-100 text-base md:text-lg leading-relaxed min-h-[70px] font-medium">
+                            <!-- Texto inserido dinamicamente via JS -->
+                        </p>
+                    </div>
+
+                    <!-- INDICADOR "▼ CLIQUE PARA CONTINUAR" -->
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-800/80 mt-2">
+                        <span class="text-xs text-slate-500 font-mono" id="vn-step-indicator">1 / 5</span>
+                        <div class="text-indigo-400 font-bold text-xs md:text-sm flex items-center space-x-1.5 animate-bounce">
+                            <span>Clique para avançar</span>
+                            <i class="fa-solid fa-caret-down text-base"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <section id="screen-quiz" class="hidden w-full max-w-3xl flex flex-col items-center">
+            
+            <!-- BARRA DE STATUS SUPERIOR -->
+            <div class="w-full flex justify-between items-center bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 mb-4 shadow-xl backdrop-blur-md">
+                <div class="flex items-center space-x-2">
+                    <span class="bg-indigo-950 text-indigo-300 text-xs md:text-sm font-bold px-3 py-1.5 rounded-xl border border-indigo-800" id="quiz-counter">
+                        Pergunta 1 de 10
+                    </span>
+                </div>
+                
+                <div class="flex items-center space-x-3 text-amber-400 font-bold text-sm md:text-base">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Acertos: <span id="quiz-score" class="text-white">0</span></span>
+                </div>
+            </div>
+
+            <!-- CARD DA PERGUNTA E IMAGEM -->
+            <div class="w-full bg-slate-900/90 border border-slate-800 rounded-3xl p-4 md:p-6 shadow-2xl flex flex-col items-center text-center backdrop-blur-md mb-4">
+                <h2 class="font-display text-lg md:text-2xl font-bold text-slate-100 mb-4">
+                    Esta imagem é uma foto REAL ou foi gerada por Inteligência Artificial?
+                </h2>
+
+                <!-- Container da Imagem -->
+                <div class="relative w-full max-w-md h-64 md:h-72 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 flex items-center justify-center group">
+                    <img id="quiz-img" src="" alt="Desafio Quiz" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    
+                    <!-- Botão de Expandir / Zoom na Imagem -->
+                    <button data-action="open-zoom" class="absolute bottom-3 right-3 bg-slate-950/80 hover:bg-slate-900 text-slate-200 text-xs px-3 py-1.5 rounded-xl border border-slate-700 backdrop-blur-sm transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        <span>Ampliar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- BOTÕES ESTILO KAHOOT -->
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- BOTÃO: GERADA POR IA (▲ VERMELHO) -->
+                <button data-action="submit-answer" data-answer="true" class="btn-kahoot-ai py-5 px-6 rounded-2xl font-display font-bold text-lg md:text-xl text-white flex items-center justify-center space-x-4 cursor-pointer">
+                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+                        <span class="text-2xl">▲</span>
+                    </div>
+                    <span>Gerada por IA</span>
+                </button>
+
+                <!-- BOTÃO: IMAGEM REAL (◆ AZUL) -->
+                <button data-action="submit-answer" data-answer="false" class="btn-kahoot-real py-5 px-6 rounded-2xl font-display font-bold text-lg md:text-xl text-white flex items-center justify-center space-x-4 cursor-pointer">
+                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+                        <span class="text-2xl">◆</span>
+                    </div>
+                    <span>Imagem Real</span>
+                </button>
+
+            </div>
+        </section>
+
+
+        <div id="modal-feedback" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl text-center">
+                
+                <div id="feedback-icon-box" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4">
+                    <!-- Ícone Dinâmico -->
+                </div>
+
+                <h3 id="feedback-title" class="font-display text-2xl md:text-3xl font-bold mb-2">
+                    <!-- Correto / Incorreto -->
+                </h3>
+
+                <!-- Explicação do Professor -->
+                <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 text-left mb-6 my-4">
+                    <div class="flex items-center space-x-2 text-indigo-400 text-xs font-bold mb-1">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>Explicação do Professor:</span>
+                    </div>
+                    <p id="feedback-desc" class="text-slate-300 text-sm leading-relaxed">
+                        <!-- Texto explicativo -->
+                    </p>
+                </div>
+
+                <button data-action="next-question" class="w-full py-3.5 px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-base rounded-2xl shadow-lg transition cursor-pointer">
+                    Próxima Pergunta <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL DE ZOOM NA IMAGEM DA QUESTÃO -->
+        <div id="modal-zoom" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4" data-action="close-zoom">
+            <div class="relative max-w-4xl w-full max-h-[85vh] flex items-center justify-center">
+                <img id="zoom-img-target" src="" class="max-w-full max-h-[80vh] rounded-2xl border border-slate-700 shadow-2xl object-contain">
+            </div>
+            <p class="text-slate-400 text-xs mt-4">Clique em qualquer lugar para fechar</p>
+        </div>
+
+
+        <section id="screen-result" class="hidden w-full max-w-3xl bg-slate-900/90 border border-slate-800 rounded-3xl p-6 md:p-8 text-center shadow-2xl backdrop-blur-md">
+            
+            <div id="result-icon-box" class="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-xl">
+                <!-- Ícone Vitória ou Derrota -->
+            </div>
+
+            <h1 id="result-status-title" class="font-display text-3xl md:text-5xl font-extrabold mb-2 text-white">
+                <!-- Título Vitória/Derrota -->
+            </h1>
+
+            <p id="result-status-subtitle" class="text-slate-300 text-sm md:text-base mb-6">
+                <!-- Subtítulo -->
+            </p>
+
+            <!-- Placar de Desempenho -->
+            <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-5 mb-6 max-w-md mx-auto">
+                <div class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Pontuação Final</div>
+                <div class="text-4xl md:text-5xl font-display font-extrabold text-amber-400" id="result-score-text">
+                    0 / 10
+                </div>
+                <p class="text-xs text-slate-400 mt-2" id="result-criteria-note">
+                    Mínimo para aprovação: 6 acertos (60%)
+                </p>
+            </div>
+
+            <!-- REVISÃO DAS 10 QUESTÕES -->
+            <div class="text-left mb-6">
+                <h3 class="font-display font-bold text-lg text-slate-200 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-400"></i>
+                    <span>Revisão das Respostas:</span>
+                </h3>
+                
+                <div id="review-list-container" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                    <!-- Itens inseridos dinamicamente via JS -->
+                </div>
+            </div>
+
+            <button data-action="restart-game" class="w-full max-w-md py-4 px-8 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-xl rounded-2xl shadow-lg transition cursor-pointer flex items-center justify-center space-x-3 mx-auto">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>JOGAR NOVAMENTE</span>
+            </button>
+        </section>
+
+    </main>
+
+    <footer class="w-full max-w-5xl text-center text-xs text-slate-500 py-3 mt-4 border-t border-slate-800/60">
+        Desenvolvido para trabalho acadêmico de TI &bull; Tema: Percepção Visual & IA
+    </footer>
+
+
+    <script src="data/game-data.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
