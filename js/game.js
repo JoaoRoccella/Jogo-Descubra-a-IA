@@ -109,13 +109,13 @@ function startTypewriter(text) {
     clearInterval(typewriterTimer);
     currentTextToType = text;
     const textEl = document.getElementById("vn-text");
-    textEl.innerText = "";
+    textEl.textContent = "";
     isTyping = true;
     let i = 0;
 
     typewriterTimer = setInterval(() => {
         if (i < text.length) {
-            textEl.innerText += text.charAt(i);
+            textEl.textContent += text.charAt(i);
             i++;
         } else {
             clearInterval(typewriterTimer);
@@ -128,7 +128,7 @@ function handleDialogueClick() {
     if (isTyping) {
         // Se estiver digitando, completa o texto instantaneamente no clique
         clearInterval(typewriterTimer);
-        document.getElementById("vn-text").innerText = currentTextToType;
+        document.getElementById("vn-text").textContent = currentTextToType;
         isTyping = false;
     } else {
         // Avança para a próxima fala
