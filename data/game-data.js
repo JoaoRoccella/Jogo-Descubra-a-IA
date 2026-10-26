@@ -3,13 +3,13 @@ const PERSONAGENS = {
 nome: "Prof. Edgar",
 // Para usar outra imagem, atualize o caminho em assets/images/.
 imagem: "assets/images/edgard.png",
-corBadge: "bg-indigo-600 border-indigo-300"
+corBadge: "bg-cyan-600 border-cyan-300"
     },
     joao: {
 nome: "Prof. João",
 // Para usar outra imagem, atualize o caminho em assets/images/.
 imagem: "assets/images/joao.png",
-corBadge: "bg-emerald-600 border-emerald-300"
+corBadge: "bg-fuchsia-600 border-fuchsia-300"
     }
 };
 

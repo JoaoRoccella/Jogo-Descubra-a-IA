@@ -1,35 +1,149 @@
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #090d16;
+    background-color: #020b20;
     color: #f8fafc;
     user-select: none;
     overflow-x: hidden;
 }
 
-/* Fundo Animado com Névoa Escura */
-.dark-ambient-bg {
-    background: radial-gradient(circle at 50% 20%, #4b1b23 0%, #2a1b0f 45%, #220101 100%);
+.font-display {
+    font-family: 'Oxanium', sans-serif;
 }
 
-/* Visual Novel Dialogue Box (Ace Attorney & Wikipe-tan Style) */
+.dark-ambient-bg {
+    background:
+        radial-gradient(ellipse at 8% 4%, rgba(0, 102, 255, 0.32), transparent 34rem),
+        radial-gradient(ellipse at 92% 24%, rgba(0, 190, 255, 0.12), transparent 30rem),
+        radial-gradient(ellipse at 82% 92%, rgba(219, 39, 176, 0.13), transparent 28rem),
+        linear-gradient(135deg, #020b20 0%, #061633 54%, #02091a 100%);
+}
+
+.dark-ambient-bg::before {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image:
+        linear-gradient(rgba(22, 96, 196, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22, 96, 196, 0.07) 1px, transparent 1px);
+    background-size: 48px 48px;
+    content: "";
+    pointer-events: none;
+}
+
+.event-header {
+    background: rgba(3, 15, 39, 0.84);
+    border-color: rgba(31, 132, 255, 0.35);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
+}
+
+.event-mark {
+    color: #44d9ff;
+    border-color: rgba(45, 207, 255, 0.55);
+    background: linear-gradient(135deg, rgba(0, 151, 255, 0.28), rgba(219, 39, 176, 0.18));
+}
+
+.event-start-card {
+    background: linear-gradient(145deg, rgba(4, 20, 48, 0.97), rgba(2, 11, 31, 0.97));
+    border-color: rgba(26, 142, 255, 0.52);
+    box-shadow: 0 20px 70px rgba(0, 5, 20, 0.55), 0 0 38px rgba(0, 112, 255, 0.13);
+}
+
+.event-kicker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.45rem 1.15rem;
+    border: 1px solid rgba(210, 229, 255, 0.8);
+    border-radius: 999px;
+    color: #f8fbff;
+    font-family: 'Oxanium', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+}
+
+.event-kicker-line {
+    display: none;
+}
+
+.event-poster {
+    display: block;
+    border: 1px solid rgba(52, 164, 255, 0.72);
+    box-shadow: 0 0 30px rgba(0, 104, 255, 0.18);
+}
+
+.event-start-actions {
+    border-bottom: 1px solid rgba(71, 103, 152, 0.4);
+}
+
+.event-start-button {
+    background: linear-gradient(105deg, #087bf5, #08c5e8 62%, #a737d8);
+    box-shadow: 0 6px 0 #064caa, 0 0 24px rgba(0, 174, 255, 0.28);
+}
+
+.event-start-button:hover {
+    filter: brightness(1.12);
+    box-shadow: 0 7px 0 #064caa, 0 0 32px rgba(0, 174, 255, 0.46);
+}
+
+.event-start-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #064caa;
+}
+
+.event-start-button:focus-visible,
+button:focus-visible {
+    outline: 3px solid #f45be2;
+    outline-offset: 3px;
+}
+
+.event-activity-card {
+    background: linear-gradient(135deg, rgba(5, 26, 60, 0.88), rgba(3, 16, 41, 0.94));
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.event-activity-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(39, 187, 255, 0.65);
+}
+
+.event-location {
+    flex: none;
+    padding: 0.25rem 0.55rem;
+    border: 1px solid rgba(0, 167, 255, 0.38);
+    border-radius: 999px;
+    background: rgba(0, 119, 255, 0.14);
+    color: #55c9ff;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.event-footer {
+    color: #9caec9;
+    border-color: rgba(31, 132, 255, 0.32);
+}
+
+/* Visual Novel dialogue and character lighting */
 .vn-dialogue-box {
-    background: rgba(15, 23, 42, 0.94);
-    border: 2px solid rgba(241, 99, 130, 0.5);
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 20px rgba(99, 102, 241, 0.25);
+    background: rgba(4, 17, 43, 0.96);
+    border: 2px solid rgba(0, 184, 255, 0.55);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 144, 255, 0.2);
     backdrop-filter: blur(12px);
 }
 
-/* Sombra e Destaque nos Personagens VN */
 .vn-sprite {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease, opacity 0.3s ease;
     transform-origin: bottom center;
 }
+
 .vn-sprite.speaking {
     transform: scale(1.05);
     opacity: 1;
-    filter: drop-shadow(0 0 25px rgba(241, 99, 158, 0.4)) brightness(1.05);
+    filter: drop-shadow(0 0 25px rgba(0, 190, 255, 0.38)) brightness(1.05);
     z-index: 20;
 }
+
 .vn-sprite.silent {
     transform: scale(0.95);
     opacity: 0.45;
@@ -37,48 +151,100 @@ body {
     z-index: 10;
 }
 
-/* Botões Kahoot com Efeito 3D */
+/* The poster's magenta and cyan accents carry through to the answer choices. */
 .btn-kahoot-ai {
-    background-color: #e11d48;
-    box-shadow: 0 6px 0 #9f1239;
+    background: linear-gradient(135deg, #e632aa, #a727c8);
+    box-shadow: 0 6px 0 #741d8d;
     transition: all 0.15s ease;
 }
+
 .btn-kahoot-ai:hover {
-    background-color: #f43f5e;
+    background: linear-gradient(135deg, #f34abb, #bd36dc);
     transform: translateY(-2px);
-    box-shadow: 0 8px 0 #9f1239;
+    box-shadow: 0 8px 0 #741d8d;
 }
+
 .btn-kahoot-ai:active {
     transform: translateY(4px);
-    box-shadow: 0 2px 0 #9f1239;
+    box-shadow: 0 2px 0 #741d8d;
 }
 
 .btn-kahoot-real {
-    background-color: #0284c7;
+    background: linear-gradient(135deg, #05bfae, #087fe4);
     box-shadow: 0 6px 0 #075985;
     transition: all 0.15s ease;
 }
+
 .btn-kahoot-real:hover {
-    background-color: #38bdf8;
+    background: linear-gradient(135deg, #14d8bf, #168ff2);
     transform: translateY(-2px);
     box-shadow: 0 8px 0 #075985;
 }
+
 .btn-kahoot-real:active {
     transform: translateY(4px);
     box-shadow: 0 2px 0 #075985;
+}
+
+/* Reuse cyan from the SELIBI artwork wherever the existing UI uses indigo. */
+.text-indigo-400 {
+    color: #37caff !important;
+}
+
+.text-indigo-300 {
+    color: #7bdcff !important;
+}
+
+.bg-indigo-600 {
+    background-color: #087fe4 !important;
+}
+
+.bg-indigo-500:hover,
+.hover\:bg-indigo-500:hover {
+    background-color: #079bdc !important;
+}
+
+.bg-indigo-950 {
+    background-color: #05244d !important;
+}
+
+.border-indigo-800 {
+    border-color: #13528a !important;
+}
+
+.border-indigo-300 {
+    border-color: #63d8ff !important;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-    background: #0f172a;
+    background: #07152d;
 }
+
 ::-webkit-scrollbar-thumb {
-    background: #812e4a;
+    background: #087fe4;
     border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-    background: #ca5a38;
+    background: #d541c6;
+}
+
+@media (max-width: 640px) {
+    .event-start-card {
+        padding: 1rem;
+    }
+
+    .event-poster {
+        border-radius: 0.85rem;
+    }
+
+    .event-footer {
+        font-size: 0.65rem;
+        line-height: 1.7;
+    }
 }
