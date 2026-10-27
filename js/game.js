@@ -273,7 +273,7 @@ function finishQuiz() {
         iconBox.innerHTML = '<i class="fa-solid fa-trophy"></i>';
         titleEl.innerText = "VOCÊ VENCEU!";
         titleEl.className = "font-display text-3xl md:text-5xl font-extrabold mb-2 text-emerald-400";
-        subtitleEl.innerText = "Parabéns! Você demonstrou excelente percepção para identificar inteligência artificial.";
+        subtitleEl.innerText = "";
     } else {
         iconBox.className = "w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-4 bg-rose-500/20 text-rose-400 border border-rose-500/40 shadow-rose-500/20";
         iconBox.innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i>';

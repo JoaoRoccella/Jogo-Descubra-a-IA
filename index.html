@@ -256,6 +256,7 @@
 
         <section id="screen-result" class="hidden w-full max-w-3xl bg-slate-900/90 border border-slate-800 rounded-3xl p-6 md:p-8 text-center shadow-2xl backdrop-blur-md">
             
+        <div class="result">
             <div id="result-icon-box" class="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-xl">
                 <!-- Ícone Vitória ou Derrota -->
             </div>
@@ -268,6 +269,8 @@
                 <!-- Subtítulo -->
             </p>
 
+            
+
             <!-- Placar de Desempenho -->
             <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-5 mb-6 max-w-md mx-auto">
                 <div class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Pontuação Final</div>
@@ -278,6 +281,13 @@
                     Mínimo para aprovação: 3 acertos (60%)
                 </p>
             </div>
+
+            <button data-action="restart-game" class="w-full max-w-md py-4 px-8 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-xl rounded-2xl shadow-lg transition cursor-pointer flex items-center justify-center space-x-3 mx-auto">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>JOGAR NOVAMENTE</span>
+            </button>
+
+        </div>
 
             <!-- REVISÃO DAS 5 QUESTÕES -->
             <div class="text-left mb-6">
@@ -291,10 +301,7 @@
                 </div>
             </div>
 
-            <button data-action="restart-game" class="w-full max-w-md py-4 px-8 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-xl rounded-2xl shadow-lg transition cursor-pointer flex items-center justify-center space-x-3 mx-auto">
-                <i class="fa-solid fa-rotate-right"></i>
-                <span>JOGAR NOVAMENTE</span>
-            </button>
+            
         </section>
 
     </main>

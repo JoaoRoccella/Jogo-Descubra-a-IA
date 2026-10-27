@@ -309,7 +309,7 @@ button:focus-visible {
         grid-template-rows: auto minmax(0, 1fr);
         align-items: start;
         column-gap: clamp(1rem, 2.5vw, 2.5rem);
-        padding: clamp(0.75rem, 2vh, 1.75rem) clamp(1rem, 2.5vw, 2.5rem);
+        padding: clamp(2.75rem, 2vh, 1.75rem) clamp(1rem, 2.5vw, 2.5rem);
         text-align: left;
     }
 
@@ -320,9 +320,9 @@ button:focus-visible {
     #screen-start .event-poster {
         grid-column: 1;
         grid-row: 1 / span 2;
-        align-self: center;
+        align-self: start;
         width: 100%;
-        height: 100%;
+        /* height: 100%; */
         min-height: 0;
         object-fit: contain;
     }
@@ -417,7 +417,8 @@ button:focus-visible {
         grid-row: 2;
         min-height: 0;
         margin: 0;
-        padding: clamp(0.75rem, 2vh, 1.5rem);
+        /* padding: clamp(0.75rem, 2vh, 1.5rem); */
+        padding: 0;
     }
 
     #screen-quiz > div:nth-child(1) {
@@ -456,12 +457,13 @@ button:focus-visible {
 
     /* Result: summary on the left, review on the right */
     #screen-result:not(.hidden) {
-        display: grid;
-        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
-        grid-template-rows: auto auto auto auto minmax(0, 1fr);
-        column-gap: clamp(1rem, 3vw, 3rem);
-        align-content: center;
-        padding: clamp(0.75rem, 2.5vh, 2rem) clamp(1rem, 3vw, 3rem);
+        display: flex;
+        /* grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+        grid-template-rows: auto auto auto auto minmax(0, 1fr); */
+        gap: clamp(1rem, 3vw, 3rem);
+        justify-content: space-between;
+        align-items: center;
+        /* padding: clamp(0.75rem, 2.5vh, 2rem) clamp(1rem, 3vw, 3rem); */
     }
 
     #screen-result > * {
@@ -482,7 +484,7 @@ button:focus-visible {
     }
 
     #screen-result > div:nth-of-type(2) {
-        width: 100%;
+        width: 50%;
         margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
     }
 
